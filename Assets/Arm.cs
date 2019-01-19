@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Arm : MonoBehaviour
 {
-    /*public bool touching;
+    public bool touching;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -21,5 +21,5 @@ public class Arm : MonoBehaviour
             touching = false;
         }
     }
-    */
+    
 }
