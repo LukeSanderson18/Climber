@@ -21,7 +21,7 @@ public class Arm : MonoBehaviour
     {
         if (collision.gameObject.layer == 8) //if touching wall
         {
-            timer = 0.05f;
+            timer = 0.01f;
             testTouch = false;
         }
     }
