@@ -7,7 +7,7 @@ public class Arm : MonoBehaviour
     public bool touching;
     private float timer;
     private bool testTouch;
-    //public Transform otherObj;
+    public GameObject otherObj;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -15,6 +15,7 @@ public class Arm : MonoBehaviour
         {
             touching = true;
             testTouch = true;
+            otherObj = collision.gameObject;
         }
     }
 
@@ -24,6 +25,7 @@ public class Arm : MonoBehaviour
         {
             timer = 0.01f;
             testTouch = false;
+            otherObj = null;
         }
     }
 

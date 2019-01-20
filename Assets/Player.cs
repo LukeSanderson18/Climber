@@ -35,6 +35,9 @@ public class Player : MonoBehaviour
     public float jumpSpeed = 5f;
     public float midAirSpeed = 5f;
 
+    private GameObject lGO;
+    private GameObject rGO;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -173,25 +176,42 @@ public class Player : MonoBehaviour
         {
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
+
             Vector3 pos = armL.transform.position;
             transform.Rotate(Vector3.back, -3, Space.Self);
             pos -= armL.transform.position;
             transform.position += pos;
+
             handLSpr.sprite = handL.closed;
+            lGO = armLArm.otherObj;
         }
-        else { handLSpr.sprite = handL.open; }
+        else
+        {
+            handLSpr.sprite = handL.open;
+            lGO = null;
+        }
 
         if (rHold)
         {
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
+
+            rGO = armRArm.otherObj;
+
             Vector3 pos = armR.transform.position;
+            Vector3 otherPos = rGO.transform.position;
             transform.Rotate(Vector3.back, 3, Space.Self);
             pos -= armR.transform.position;
             transform.position += pos;
+
             handRSpr.sprite = handR.closed;
+            
         }
-        else { handRSpr.sprite = handR.open; }
+        else
+        {
+            handRSpr.sprite = handR.open;
+            rGO = null;
+        }
 
         //Add jump force when releasing
 
