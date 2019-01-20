@@ -7,6 +7,7 @@ public class Arm : MonoBehaviour
     public bool touching;
     private float timer;
     private bool testTouch;
+    //public Transform otherObj;
 
     private void OnTriggerStay2D(Collider2D collision)
     {

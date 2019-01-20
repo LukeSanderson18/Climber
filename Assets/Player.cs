@@ -32,7 +32,8 @@ public class Player : MonoBehaviour
     bool lHold;
     bool rHold;
 
-    public float jumpSpeed = 5;
+    public float jumpSpeed = 5f;
+    public float midAirSpeed = 5f;
 
     private void Start()
     {
@@ -97,6 +98,18 @@ public class Player : MonoBehaviour
 
         //Player logic
 
+        //move in air
+
+        if (lC && !lHold)
+        {
+            rb.AddForce(Vector2.left * midAirSpeed);
+        }
+
+        if (rC && !rHold)
+        {
+            rb.AddForce(Vector2.right * midAirSpeed);
+        }
+
         //Left Arm
         if (armLArm.touching)
         {
@@ -126,8 +139,25 @@ public class Player : MonoBehaviour
         }
 
         //if release button, l/rHold becomes false.
-        if (lRel) lHold = false;
-        if (rRel) rHold = false;
+        if (lRel)
+        {
+            if(lHold && armLArm.touching)
+            {
+                rb.gravityScale = 1;
+                rb.velocity = transform.up * jumpSpeed;
+            }
+
+            lHold = false;
+        }
+        if (rRel)
+        {
+            if (rHold && armRArm.touching)
+            {
+                rb.gravityScale = 1;
+                rb.velocity = transform.up * jumpSpeed;
+            }
+            rHold = false;
+        }
 
         if (lHold && rHold)
         {
@@ -164,11 +194,13 @@ public class Player : MonoBehaviour
         else { handRSpr.sprite = handR.open; }
 
         //Add jump force when releasing
-        if (((rRel && armRArm.touching) || (lRel && armLArm.touching)) && (!lC && !rC))
+
+        /*if (((rRel && armRArm.touching) || (lRel && armLArm.touching)) && (!lC && !rC))
         {
             rb.gravityScale = 1;
             rb.velocity = transform.up * jumpSpeed;
-            //rb.AddForce(transform.up * jumpSpeed,ForceMode2D.Impulse);
         }
+        */
+
     }
 }
