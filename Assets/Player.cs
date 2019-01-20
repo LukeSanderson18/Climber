@@ -12,8 +12,10 @@ public class Player : MonoBehaviour
     private SpriteRenderer armLSprite;
     private SpriteRenderer armRSprite;
 
-    private SpriteRenderer handL;
-    private SpriteRenderer handR;
+    private Hand handL;
+    private Hand handR;
+    private SpriteRenderer handLSpr;
+    private SpriteRenderer handRSpr;
 
     private Arm armLArm;
     private Arm armRArm;
@@ -38,8 +40,11 @@ public class Player : MonoBehaviour
         armLSprite = armL.GetComponent<SpriteRenderer>();
         armRSprite = armR.GetComponent<SpriteRenderer>();
 
-        handL = armL.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        handR = armR.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        handL = armL.transform.GetChild(0).GetComponent<Hand>();
+        handR = armR.transform.GetChild(0).GetComponent<Hand>();
+
+        handLSpr = handL.GetComponent<SpriteRenderer>();
+        handRSpr = handR.GetComponent<SpriteRenderer>();
 
         armLArm = armL.GetComponent<Arm>();
         armRArm = armR.GetComponent<Arm>();
@@ -66,6 +71,16 @@ public class Player : MonoBehaviour
         if (rHold) armRSprite.color = Color.cyan;
         else { armRSprite.color = armRArm.touching ? Color.green : Color.red; }
 
+        //Setting alpha like a lazy boi
+        Color tmp = armLSprite.color;
+        tmp.a = 0.2f;
+        armLSprite.color = tmp;
+
+        tmp = armRSprite.color;
+        tmp.a = 0.2f;
+        armRSprite.color = tmp;
+
+        //Input
         lC = Input.GetMouseButton(0);
         rC = Input.GetMouseButton(1);
 
@@ -118,6 +133,8 @@ public class Player : MonoBehaviour
         {
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
+            handLSpr.sprite = handL.closed;
+            handRSpr.sprite = handR.closed;
             return;
         }
 
@@ -130,7 +147,10 @@ public class Player : MonoBehaviour
             transform.Rotate(Vector3.back, -3, Space.Self);
             pos -= armL.transform.position;
             transform.position += pos;
+            handLSpr.sprite = handL.closed;
         }
+        else { handLSpr.sprite = handL.open; }
+
         if (rHold)
         {
             rb.gravityScale = 0;
@@ -139,7 +159,9 @@ public class Player : MonoBehaviour
             transform.Rotate(Vector3.back, 3, Space.Self);
             pos -= armR.transform.position;
             transform.position += pos;
+            handRSpr.sprite = handR.closed;
         }
+        else { handRSpr.sprite = handR.open; }
 
         //Add jump force when releasing
         if (((rRel && armRArm.touching) || (lRel && armLArm.touching)) && (!lC && !rC))
