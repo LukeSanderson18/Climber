@@ -8,9 +8,10 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     public GameObject armL;
     public GameObject armR;
-
     private SpriteRenderer armLSprite;
     private SpriteRenderer armRSprite;
+    private Rigidbody2D armRrb;
+    private Rigidbody2D armLrb;
 
     private Hand handL;
     private Hand handR;
@@ -43,6 +44,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         armLSprite = armL.GetComponent<SpriteRenderer>();
         armRSprite = armR.GetComponent<SpriteRenderer>();
+        armLrb = armL.GetComponent<Rigidbody2D>();
+        armRrb = armR.GetComponent<Rigidbody2D>();
 
         handL = armL.transform.GetChild(0).GetComponent<Hand>();
         handR = armR.transform.GetChild(0).GetComponent<Hand>();
@@ -144,7 +147,7 @@ public class Player : MonoBehaviour
         //if release button, l/rHold becomes false.
         if (lRel)
         {
-            if(lHold && armLArm.touching)
+            if (lHold && armLArm.touching)
             {
                 rb.gravityScale = 1;
                 rb.velocity = transform.up * jumpSpeed;
@@ -178,16 +181,25 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.zero;
 
             Vector3 pos = armL.transform.position;
+            //rb.AddTorque(Vector3.back, -3, Space.Self);
+            //rb.AddTorque(-3);
+            //rb.MoveRotation(rb.rotation + -300 * Time.fixedDeltaTime);
+            //rb.AddForce(transform.up * 20);
+            //armLrb.MoveRotation(armLrb.rotation + 5 * Time.fixedDeltaTime);
             transform.Rotate(Vector3.back, -3, Space.Self);
             pos -= armL.transform.position;
             transform.position += pos;
 
             handLSpr.sprite = handL.closed;
             lGO = armLArm.otherObj;
+
+            armLrb.isKinematic = true;
+            armLrb.velocity = Vector2.zero;
         }
         else
         {
             handLSpr.sprite = handL.open;
+            armLrb.isKinematic = false;
             lGO = null;
         }
 
@@ -200,16 +212,24 @@ public class Player : MonoBehaviour
 
             Vector3 pos = armR.transform.position;
             Vector3 otherPos = rGO.transform.position;
+            //transform.Rotate(Vector3.back, 3, Space.Self);
+            //rb.AddTorque(3);
+            //rb.MoveRotation(rb.rotation + 300 * Time.fixedDeltaTime);
+            //rb.AddForce(transform.up * 20);
+            //armRrb.MoveRotation(armRrb.rotation + 5 * Time.fixedDeltaTime);
             transform.Rotate(Vector3.back, 3, Space.Self);
             pos -= armR.transform.position;
             transform.position += pos;
 
             handRSpr.sprite = handR.closed;
-            
+
+            armRrb.isKinematic = true;
+            armRrb.velocity = Vector2.zero;
         }
         else
         {
             handRSpr.sprite = handR.open;
+            armRrb.isKinematic = false;
             rGO = null;
         }
 
