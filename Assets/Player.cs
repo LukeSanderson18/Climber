@@ -39,6 +39,14 @@ public class Player : MonoBehaviour
     private GameObject lGO;
     private GameObject rGO;
 
+    Vector2 lPosStart;
+    Vector2 rPosStart;
+
+    public Vector2 lpos;
+    public Vector2 rpos;
+
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -63,13 +71,19 @@ public class Player : MonoBehaviour
 
     }
 
+    public void Reset()
+    {
+
+        SceneManager.LoadScene(0);
+
+    }
     private void Update()
     {
         //Inputs and the like.
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(0);
+            Reset();
         }
 
         if (lHold) armLSprite.color = Color.cyan;
@@ -122,6 +136,10 @@ public class Player : MonoBehaviour
             if (lPre)
             {
                 lHold = true;
+
+                lGO = armLArm.otherObj;
+                if (lGO)
+                    lPosStart = lGO.transform.position - armL.transform.position;
             }
         }
         else
@@ -136,6 +154,10 @@ public class Player : MonoBehaviour
             if (rPre)
             {
                 rHold = true;
+
+                rGO = armRArm.otherObj;
+                if (rGO)
+                    rPosStart = rGO.transform.position - armR.transform.position;
             }
         }
         else
@@ -181,25 +203,22 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.zero;
 
             Vector3 pos = armL.transform.position;
-            //rb.AddTorque(Vector3.back, -3, Space.Self);
-            //rb.AddTorque(-3);
-            //rb.MoveRotation(rb.rotation + -300 * Time.fixedDeltaTime);
-            //rb.AddForce(transform.up * 20);
-            //armLrb.MoveRotation(armLrb.rotation + 5 * Time.fixedDeltaTime);
+
+            if (lGO)
+            {
+                pos = (Vector2)lGO.transform.position - lPosStart;// + (rpos - rPosStart);               
+                //armL.transform.position = (Vector2)lGO.transform.position - lPosStart;// + (rpos - rPosStart);               
+            }
+
             transform.Rotate(Vector3.back, -3, Space.Self);
             pos -= armL.transform.position;
             transform.position += pos;
 
             handLSpr.sprite = handL.closed;
-            lGO = armLArm.otherObj;
-
-            armLrb.isKinematic = true;
-            armLrb.velocity = Vector2.zero;
         }
         else
         {
             handLSpr.sprite = handL.open;
-            armLrb.isKinematic = false;
             lGO = null;
         }
 
@@ -208,39 +227,32 @@ public class Player : MonoBehaviour
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
 
-            rGO = armRArm.otherObj;
-
             Vector3 pos = armR.transform.position;
-            Vector3 otherPos = rGO.transform.position;
-            //transform.Rotate(Vector3.back, 3, Space.Self);
-            //rb.AddTorque(3);
-            //rb.MoveRotation(rb.rotation + 300 * Time.fixedDeltaTime);
-            //rb.AddForce(transform.up * 20);
-            //armRrb.MoveRotation(armRrb.rotation + 5 * Time.fixedDeltaTime);
+
+            if (rGO)
+            {
+                pos = (Vector2)rGO.transform.position - rPosStart;// + (rpos - rPosStart);     
+                //armR.transform.position = (Vector2)rGO.transform.position - rPosStart;// + (rpos - rPosStart);
+                //armR.transform.position = pos;
+            }
+
             transform.Rotate(Vector3.back, 3, Space.Self);
             pos -= armR.transform.position;
             transform.position += pos;
 
             handRSpr.sprite = handR.closed;
-
-            armRrb.isKinematic = true;
-            armRrb.velocity = Vector2.zero;
         }
         else
         {
             handRSpr.sprite = handR.open;
-            armRrb.isKinematic = false;
             rGO = null;
         }
-
-        //Add jump force when releasing
-
-        /*if (((rRel && armRArm.touching) || (lRel && armLArm.touching)) && (!lC && !rC))
-        {
-            rb.gravityScale = 1;
-            rb.velocity = transform.up * jumpSpeed;
-        }
-        */
-
     }
 }
+
+/* //rb.AddTorque(Vector3.back, -3, Space.Self);
+            //rb.AddTorque(-3);
+            //rb.MoveRotation(rb.rotation + -300 * Time.fixedDeltaTime);
+            //rb.AddForce(transform.up * 20);
+            //armLrb.MoveRotation(armLrb.rotation + 5 * Time.fixedDeltaTime);
+*/

@@ -8,6 +8,7 @@ public class Arm : MonoBehaviour
     private float timer;
     private bool testTouch;
     public GameObject otherObj;
+    Vector2 startPos;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -23,10 +24,15 @@ public class Arm : MonoBehaviour
     {
         if (collision.gameObject.layer == 8) //if touching wall
         {
-            timer = 0.01f;
+            timer = 0.03f;
             testTouch = false;
             otherObj = null;
         }
+    }
+
+    private void Start()
+    {
+        startPos = transform.localPosition;
     }
 
     private void Update()
@@ -41,5 +47,8 @@ public class Arm : MonoBehaviour
             if(!testTouch)
             touching = false;
         }
+
+        //Just to make sure they dont go jumping about
+        //transform.localPosition = startPos;
     }
 }
